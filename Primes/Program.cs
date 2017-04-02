@@ -8,7 +8,10 @@ namespace Primes
 		static void Main(string[] args)
 		{
 			int count = 1_000_000;
-			Console.WriteLine($"Count of first {count} primes: {FindPrimes(count).Length}");
+			int[] primes = FindPrimes(count);
+			Console.WriteLine($"Count of first {count} primes: {primes.Length}");
+			foreach (var prime in primes)
+				Console.WriteLine(prime);
 		}
 
 		static int[] FindPrimes(int max)
@@ -23,7 +26,8 @@ namespace Primes
 				for(int j = i + i; j <= max; j += i)
 					notPrime[j] = true;
 			}
-			return notPrime.Where(x => !x).Select((x,i) => i).ToArray();
+			return notPrime.Select((x,i) => i)
+				.Where(x => !notPrime[x]).ToArray();
 		}
 	}
 }
