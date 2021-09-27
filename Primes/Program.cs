@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Primes
@@ -7,30 +8,25 @@ namespace Primes
 	{
 		static void Main(string[] args)
 		{
-			int count = 1_000_000;
-			List<int> primes = FindPrimes(count);
-			Console.WriteLine($"Count of first {count} primes: {primes.Count}");
-			foreach (var prime in primes)
-				Console.WriteLine(prime);
+			int count = 1_000;
+			var ePrimes = Erastothenes(count);
+			var primes = new List<int>();
+			for (var i = 0; i < ePrimes.Count; i++)
+				if (ePrimes[i]) primes.Add(i);
+			Console.WriteLine(string.Join(", ", primes));
 		}
 
-		static List<int> FindPrimes(int max)
+		static BitArray Erastothenes(int max)
 		{
-			List<int> primes = new List<int>();
-			if (max < 2) return primes;
+			var primes = new BitArray(max + 1);
+			primes.SetAll(true);
+			primes[0] = false;
+			primes[1] = false;
 
-			bool[] notPrime = new bool[max + 1];
-			notPrime[0] = true;
-			notPrime[1] = true;
-
-			for(int i = 2; i <= max; i++)
-			{
-				if (notPrime[i]) continue;
-				primes.Add(i);
-				for(int j = i + i; j <= max; j += i)
-					notPrime[j] = true;
-			}
-
+			for (var i = 2; i <= max; i++)
+				if (primes[i])
+					for (var j = i + i; j <= max; j += i)
+						primes[j] = false;
 			return primes;
 		}
 	}
